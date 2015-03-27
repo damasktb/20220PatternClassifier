@@ -1,30 +1,45 @@
 clear; close all; format short;
 
-FEATURE_VEC_SIZE = 2;
-% Change Arrow to any other directory name to switch classes
-imgPath = 'Images/Toonface/';
-if exist(imgPath, 'dir') == 0
-    disp('Error: Image directory set incorrectly');
+FEATURE_VEC_SIZE = 5;
+
+classDirectory = 'Images/';
+if exist(classDirectory,'dir') == 0
+    disp('Error: Class directory set incorrectly.');
     return;
 end
-params = parameters(imgPath,FEATURE_VEC_SIZE);
-mu1 = params(:,1);
-C1 = params(:,2:length(params));
 
-imgPath2 = 'Images/Arrow/';
-params2 = parameters(imgPath2,FEATURE_VEC_SIZE);
-mu2 = params2(:,1);
-C2 = params2(:,2:length(params2));
+d = dir(classDirectory);
+class = [d(:).isdir];
+classes = {d(class).name}';
+classes(ismember(classes,{'.','..','.DS_Store'})) = [];
 
-mu = [0 0];
-mu = mu2'
-Sigma = [.25 .3; .3 1];
-Sigma = C2 / C2; %%%%%%%%%%%%
-x1 = -5:.2:5; x2 = -5:.2:5;
-[X1,X2] = meshgrid(x1,x2);
-F = mvnpdf([X1(:) X2(:)],mu,Sigma);
-F = reshape(F,length(x2),length(x1));
-surf(x1,x2,F);
-caxis([min(F(:))-.5*range(F(:)),max(F(:))]);
-axis([-5 5 -5 5 0 .5])
-xlabel('x1'); ylabel('x2'); zlabel('Probability Density');
+allNames = {}; allXbar = {}; allCov =  {};
+
+for idx = 1:length(classes)
+    name = classes(idx);
+    dirName = name{1};
+    allNames{idx} = dirName;
+    if exist(strcat(classDirectory,dirName,'/'),'dir') == 0
+%       disp('Error: Individual image directory set incorrectly.');
+    else
+       p = parameters(dirName,FEATURE_VEC_SIZE);
+       allXbar{idx} = p.xbar;
+       allCov{idx} = p.c;
+    end
+end
+
+classParams = struct('name',allNames,'xbar',allXbar,'c',allCov)
+
+for idx = 1:length(classParams)
+    disp(classParams(idx).name);
+    disp(classParams(idx).xbar);
+    disp(classParams(idx).c);
+end
+
+% dirName = 'Arrow';
+% if exist(strcat(classDirectory,dirName,'/'),'dir') == 0
+%     disp('Error: Individual image directory set incorrectly.');
+%     return;
+% end
+
+

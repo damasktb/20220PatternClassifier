@@ -1,8 +1,10 @@
-function params = parameters(imgPath,FEATURE_VEC_SIZE)
+function params = parameters(dirName,FEATURE_VEC_SIZE)
 
 % Change Arrow to any other directory name to switch classes
 imgType = '*.gif';
+imgPath = strcat('Images/',dirName,'/');
 images = dir([imgPath imgType]);
+images = images(1:ceil(length(images)/2));
 allFeatureVecs = zeros(FEATURE_VEC_SIZE,length(images));
 
 % To get the feature vec from the original chain codes (as opposed to the first
@@ -25,4 +27,4 @@ for idx = 1:length(images)
 end
 % This is the sample covariance matrix (with Bessel's correction applied)
 C = C / (length(images)-1);
-params = [mu C];
+params = struct('xbar',mu, 'c',C);
