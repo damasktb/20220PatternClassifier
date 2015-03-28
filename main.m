@@ -1,18 +1,26 @@
 clear; close all; format short;
 
-FEATURE_VEC_SIZE = 5;
+FEATURE_VEC_SIZE = 7;
 
+% Load all class directories from the Images folder
 classDirectory = dir('Images/');
 class = [classDirectory(:).isdir];
-classes = {classDirectory(class).name}';
-classes(ismember(classes,{'.','..','.DS_Store'})) = [];
-classNum = length(classes)
+allClasses = {classDirectory(class).name}';
+% Remove directories we don't care about
+allClasses(ismember(allClasses,{'.','..','.DS_Store'})) = [];
+classNum = length(allClasses);
 
-allNames = cell(classNum); allXbar = cell(classNum); allCov = cell(classNum); allTSet = {};
+disp(strcat(num2str(classNum), ' classes found.'));
 
-for idx = 1%1:length(classes)
-    name = classes(idx);
-    dirName = name{1};
+% Temporary cell arrays to store the class parameters and test sets
+allNames = cell(classNum); allXbar = cell(classNum); 
+allCov = cell(classNum); allTSet = cell(classNum);
+
+% Populate classData (via allNames, allXbar etc.) with
+% name/mean/covariances for each class (only training data)
+% as well as the names of the randomly chosen test data
+for idx = 1:classNum
+    dirName = allClasses{idx};
     allNames{idx} = dirName;
     if exist(strcat('Images/',dirName,'/'),'dir') == 0
        disp('Error: Individual image directory set incorrectly.');
@@ -24,10 +32,7 @@ for idx = 1%1:length(classes)
     end
 end
 
-classParams = struct('name',allNames, ...
-                     'xbar',allXbar, ...
-                     'c',allCov, ...
-                     'testSet', allTSet);
+classData = struct('name',allNames, 'xbar',allXbar, ...
+                     'c',allCov, 'testSet', allTSet);
                  
-classParams(4).testSet.name
 
