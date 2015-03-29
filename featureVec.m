@@ -1,14 +1,20 @@
 function featureVector = featureVec(im, FEATURE_VEC_SIZE)
-% %Show the binary image
-% figure;
-% imshow(im);
-% title('Raw binary image');
 
 %% Calculate and draw the chain code
 c = chainCode(im);
 
+
+s = size(c);
+s = s(:,2);
+c = mod((c(3,2:s) - c(3,1:s-1)),8);
+c = c ./ sum(c);
+
+
 %% filter using the FT of the angles of the chaincode
-angles = c(3,:)*(2*pi/8);
+%angles = c*(2*pi/8);
+% Uncomment the next two lines to produce original chain code
+angles = chainCode(im);
+angles = (2*pi/8) * angles(3,:);
 
 anglesFFT = fft(angles); %fast fourier transform
 

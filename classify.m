@@ -10,7 +10,7 @@ function classification = classify(classData,class,img,FEATURE_VEC_SIZE)
         cdx = classData(idx);
         frac = 1/((2*sqrt(pi))*(sqrt(det(cdx.c))));
         ex = exp(-1/2 * (fv-cdx.xbar)' * pinv(cdx.c) * (fv-cdx.xbar));
-        prob = frac*ex;
+        prob = cdx.prior*frac*ex;
         if prob > maxClass.probability
             maxClass.probability = prob;
             maxClass.idx = idx;

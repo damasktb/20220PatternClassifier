@@ -5,6 +5,11 @@ imgType = '*.gif';
 imgPath = strcat('Images/',dirName,'/');
 images = dir([imgPath imgType]);
 
+if length(images) == 0
+    imgType = '*.jpg';
+    images = dir([imgPath imgType]);
+end
+
 % Randomly shuffle them and divide in half, giving test and training sets
 shuffled = randperm(numel(images));
 images = reshape(images(shuffled), size(images));
@@ -34,4 +39,4 @@ end
 % This is the sample covariance matrix (with Bessel's correction applied)
 % Change length(images)-1 to length(images) to use the biased estimator
 C = C / (length(images)-1);
-params = struct('xbar', mu, 'c', C, 'testSet', testSet);
+params = struct('xbar', mu, 'c', C, 'count',length(images),'testSet', testSet);

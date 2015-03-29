@@ -1,10 +1,12 @@
-function spread = matrixSpread(cMatrix)
+function spread = matrixSpread(cMatrix,count)
     sum = 0;
     for col = 1:size(cMatrix,2)
-        for row = 1:size(cMatrix,1);
-            sum = sum + (cMatrix(row,col)*(row-col)^2);
+        for row = 1:size(cMatrix,1)
+            if row ~= col
+                sum = sum + cMatrix(row,col);
+            end
         end
     end
-    spread = sum;
+    spread = 1 - (sum/count);
 end
 
