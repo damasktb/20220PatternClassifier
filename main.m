@@ -6,17 +6,18 @@ FEATURE_VEC_SIZE = 3;
 classDirectory = dir('Images/');
 allClasses = {classDirectory([classDirectory.isdir]).name};
 % Remove directories we don't care about
-allClasses(ismember(allClasses,{'.','..','.DS_Store','InvarianceTests'})) = [];
+allClasses(ismember(allClasses,{'.','..','.DS_Store','Face'})) = [];
 classNum = length(allClasses);
 
 disp(strcat(num2str(classNum), ' classes found.'));
-disp(allClasses);
 
 % Temporary cell arrays to store the class parameters and test sets
 allNames = cell(classNum);
 allXbar = cell(classNum);
 allCov = cell(classNum);
 allTSet = cell(classNum);
+
+confusionMat = zeros(classNum+1);
 
 % Populate classData (via allNames, allXbar etc.) with
 % name/mean/covariances for each class' training data
@@ -35,5 +36,14 @@ for idx = 1:classNum
 end
 
 classData = struct('name',allNames,'xbar',allXbar,'c',allCov,'testSet', allTSet);
-classify(classData,5,3,FEATURE_VEC_SIZE)
-                 
+
+for idx = 1:classNum
+    for idx2 = 1:length(classData(idx).testSet)
+        confusionMat(idx,classify(classData,idx,idx2,FEATURE_VEC_SIZE)) = ...
+            confusionMat(idx,classify(classData,idx,idx2,FEATURE_VEC_SIZE)) + 1;
+    end
+end
+
+      
+disp(confusionMat);
+disp(matrixSpread(confusionMat));
