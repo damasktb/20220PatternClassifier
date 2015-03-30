@@ -5,7 +5,8 @@ imgType = '*.gif';
 imgPath = strcat('Images/',dirName,'/');
 images = dir([imgPath imgType]);
 
-if length(images) == 0
+% Some of the additional classes use jpegs
+if isempty(images)
     imgType = '*.jpg';
     images = dir([imgPath imgType]);
 end

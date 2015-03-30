@@ -7,6 +7,6 @@ function spread = matrixSpread(cMatrix,count)
             end
         end
     end
-    spread = 1 - (sum/count);
+    spread = 100*(1 - (sum/count));
 end
 

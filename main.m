@@ -1,12 +1,12 @@
 clear; close all; format short;
 
-FV_SIZE = 5;
+FV_SIZE = 13;
 
 % Load all class directories from the Images folder
 classDirectory = dir('Images/');
 allClasses = {classDirectory([classDirectory.isdir]).name};
 % Remove directories we don't care about
-allClasses(ismember(allClasses,{'.','..','.DS_Store','Toonface'})) = [];
+allClasses(ismember(allClasses,{'.','..','.DS_Store','Ignore'})) = [];
 classNum = length(allClasses);
 
 disp(strcat(num2str(classNum), ' classes found.'));
@@ -18,7 +18,9 @@ allCov = cell(classNum);
 allTSet = cell(classNum);
 
 confusionMat = zeros(classNum);
-allPriors = zeros(classNum,1);
+allPriors = cell(classNum);
+trainingImgCount = 0;
+
 
 % Populate classData (via allNames, allXbar etc.) with
 % name/mean/covariances for each class' training data
@@ -33,15 +35,20 @@ for idx = 1:classNum
        allXbar{idx} = p.xbar;
        allCov{idx} = p.c;
        allTSet{idx} = p.testSet;
-       allPriors(idx) = p.count;
-       dirName
-       p.count
+       allPriors{idx} = p.count;
+       trainingImgCount = trainingImgCount+length(p.testSet);
     end
 end
+    
+classData = struct('name',allNames,...
+                   'xbar',allXbar,...
+                   'c',allCov,...
+                   'testSet',allTSet,...
+                   'prior', allPriors);
 
-trainingImgCount = sum(allPriors);
-allPriors = allPriors ./ trainingImgCount;
-classData = struct('name',allNames,'xbar',allXbar,'c',allCov,'testSet', allTSet,'prior',allPriors);
+for idx = 1:classNum
+    classData(idx).prior = classData(idx).prior/trainingImgCount;
+end
 
 for idx = 1:classNum
     for idx2 = 1:length(classData(idx).testSet)
