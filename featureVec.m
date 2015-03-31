@@ -2,10 +2,19 @@ function featureVector = featureVec(im, FEATURE_VEC_SIZE)
 
 %% Calculate and draw the chain code
 %% filter using the FT of the angles of the chaincode
-%angles = c*(2*pi/8);
+
+
+% c = chainCode(im);
+% s = size(c);
+% s = s(:,2);
+% c = mod((c(3,2:s) - c(3,1:s-1)),8);
+% c = c ./ sum(c .^2);
+% angles = c*(2*pi/8);
+
 % Uncomment the next two lines to produce original chain code
 angles = chainCode(im);
 angles = (2*pi/8) * angles(3,:);
+angles = angles ./ sum(angles .^2);
 
 anglesFFT = fft(angles); %fast fourier transform
 
@@ -32,6 +41,6 @@ filteredFFT = anglesFFT .* filter;
 %reconstructedAngles = real(ifft(filteredFFT));
 % reconstructedAngles = real(ifft(abs(filteredFFT))); 
 
-featureVector = (real(filteredFFT(1:N)))';
+featureVector = (abs(filteredFFT(1:N)))';
 
 end

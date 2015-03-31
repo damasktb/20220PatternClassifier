@@ -6,7 +6,7 @@ FV_SIZE = 13;
 classDirectory = dir('Images/');
 allClasses = {classDirectory([classDirectory.isdir]).name};
 % Remove directories we don't care about
-allClasses(ismember(allClasses,{'.','..','.DS_Store','Ignore'})) = [];
+allClasses(ismember(allClasses,{'.','..','.DS_Store','Ignore','InvarianceTests'})) = [];
 classNum = length(allClasses);
 
 disp(strcat(num2str(classNum), ' classes found.'));
@@ -20,6 +20,18 @@ allTSet = cell(classNum);
 confusionMat = zeros(classNum);
 allPriors = cell(classNum);
 trainingImgCount = 0;
+
+
+
+% images = dir(['Images/InvarianceTests/' '*.gif']);
+% allFeatureVecs = zeros(13,length(images));
+% 
+% for idx = 1:length(images)
+%     im = imread(['Images/InvarianceTests/' images(idx).name]);
+% 	allFeatureVecs(:,idx) = featureVec(logical(im),13);
+% end
+% 
+% plot(allFeatureVecs)
 
 
 % Populate classData (via allNames, allXbar etc.) with
@@ -46,6 +58,8 @@ classData = struct('name',allNames,...
                    'testSet',allTSet,...
                    'prior', allPriors);
 
+
+             
 for idx = 1:classNum
     classData(idx).prior = classData(idx).prior/trainingImgCount;
 end
