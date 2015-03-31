@@ -21,19 +21,6 @@ confusionMat = zeros(classNum);
 allPriors = cell(classNum);
 trainingImgCount = 0;
 
-
-
-% images = dir(['Images/InvarianceTests/' '*.gif']);
-% allFeatureVecs = zeros(13,length(images));
-% 
-% for idx = 1:length(images)
-%     im = imread(['Images/InvarianceTests/' images(idx).name]);
-% 	allFeatureVecs(:,idx) = featureVec(logical(im),13);
-% end
-% 
-% plot(allFeatureVecs)
-
-
 % Populate classData (via allNames, allXbar etc.) with
 % name/mean/covariances for each class' training data
 % as well as the names of the randomly chosen test data
@@ -57,9 +44,7 @@ classData = struct('name',allNames,...
                    'c',allCov,...
                    'testSet',allTSet,...
                    'prior', allPriors);
-
-
-             
+               
 for idx = 1:classNum
     classData(idx).prior = classData(idx).prior/trainingImgCount;
 end
@@ -70,6 +55,8 @@ for idx = 1:classNum
         confusionMat(idx,predicted) = confusionMat(idx,predicted) + 1;
     end
 end
+
+
 
 disp(confusionMat);
 disp(matrixSpread(confusionMat,trainingImgCount));

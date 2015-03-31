@@ -14,7 +14,6 @@ function featureVector = featureVec(im, FEATURE_VEC_SIZE)
 % Uncomment the next two lines to produce original chain code
 angles = chainCode(im);
 angles = (2*pi/8) * angles(3,:);
-angles = angles ./ sum(angles .^2);
 
 anglesFFT = fft(angles); %fast fourier transform
 

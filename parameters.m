@@ -14,8 +14,10 @@ end
 % Randomly shuffle them and divide in half, giving test and training sets
 shuffled = randperm(numel(images));
 images = reshape(images(shuffled), size(images));
-testSet = images(ceil(length(images)/2)+1:length(images));
-images = images(1:ceil(length(images)/2));
+
+% 75:25
+testSet = images(3*ceil(length(images)/4)+1:length(images));
+images = images(1:3*ceil(length(images)/4));
 
 allFeatureVecs = zeros(FEATURE_VEC_SIZE,length(images));
 
