@@ -16,8 +16,9 @@ shuffled = randperm(numel(images));
 images = reshape(images(shuffled), size(images));
 
 % 75:25
-testSet = images(3*ceil(length(images)/4)+1:length(images));
-images = images(1:3*ceil(length(images)/4));
+length(images)
+testSet = images(ceil(3*length(images)/4)+1:length(images));
+images = images(1:ceil(3*length(images)/4));
 
 allFeatureVecs = zeros(FEATURE_VEC_SIZE,length(images));
 
