@@ -30,44 +30,6 @@ for idx = 1:classNum
     end
 end
 
-results = zeros(10,1);
-
-for idxx = 1:10
-    for idx = 1:classNum
-        dirName = allClasses{idx};
-        allNames{idx} = dirName;
-        if exist(strcat('Images/',dirName,'/'),'dir') == 0
-           disp('Error: Individual image directory set incorrectly.');
-        else
-           p = parameters(dirName,FV_SIZE,maxTrainingSet);
-           allXbar{idx} = p.xbar;
-           allCov{idx} = p.c;
-           allTSet{idx} = p.testSet;
-           allPriors{idx} = p.count;
-           trainingImgCount = trainingImgCount+length(p.testSet);
-        end
-    end
-
-    classData = struct('name',allNames,...
-                       'xbar',allXbar,...
-                       'c',allCov,...
-                       'testSet',allTSet,...
-                       'prior', allPriors);
-
-    for idx = 1:classNum
-        classData(idx).prior = classData(idx).prior/trainingImgCount;
-    end
-
-    for idx = 1:classNum
-        for idx2 = 1:length(classData(idx).testSet)
-            predicted = classify(classData,idx,idx2,FV_SIZE);
-            confusionMat(idx,predicted) = confusionMat(idx,predicted) + 1;
-        end
-    end
-    results(idxx,1) = matrixSpread(confusionMat,trainingImgCount);
-end
-mean(results)
-
 % Populate classData (via allNames, allXbar etc.) with
 % name/mean/covariances for each class' training data
 % as well as the names of the randomly chosen test data
@@ -102,7 +64,6 @@ for idx = 1:classNum
         confusionMat(idx,predicted) = confusionMat(idx,predicted) + 1;
     end
 end
-
 
 
 disp(confusionMat);

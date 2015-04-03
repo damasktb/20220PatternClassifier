@@ -19,7 +19,8 @@ images = reshape(images(shuffled), size(images));
 testSet = images(ceil(3*length(images)/4)+1:length(images));
 images = images(1:ceil(3*length(images)/4));
 
-%maxTrainingSet = length(images);
+% Uncomment this to stop oversampling
+maxTrainingSet = length(images);
 
 allFeatureVecs = zeros(FEATURE_VEC_SIZE,maxTrainingSet);
 
@@ -30,13 +31,13 @@ allFeatureVecs = zeros(FEATURE_VEC_SIZE,maxTrainingSet);
 for idx = 1:maxTrainingSet
     % Oversample!
     if idx > length(images)
-%         im = imread([imgPath images(randi([1, length(images)])).name]);
-%         allFeatureVecs(:,idx) = featureVec(logical(im),FEATURE_VEC_SIZE);
-        im1 = imread([imgPath images(randi([1, length(images)])).name]);
-        im2 = imread([imgPath images(randi([1, length(images)])).name]);
-        fv1 = featureVec(logical(im1),FEATURE_VEC_SIZE);
-        fv2 = featureVec(logical(im2),FEATURE_VEC_SIZE);
-        allFeatureVecs(:,idx) = (fv1+fv2)/2;
+        im = imread([imgPath images(randi([1, length(images)])).name]);
+        allFeatureVecs(:,idx) = featureVec(logical(im),FEATURE_VEC_SIZE);
+%         im1 = imread([imgPath images(randi([1, length(images)])).name]);
+%         im2 = imread([imgPath images(randi([1, length(images)])).name]);
+%         fv1 = featureVec(logical(im1),FEATURE_VEC_SIZE);
+%         fv2 = featureVec(logical(im2),FEATURE_VEC_SIZE);
+%         allFeatureVecs(:,idx) = (fv1+fv2)/2;
     else
         im = imread([imgPath images(idx).name]);
         allFeatureVecs(:,idx) = featureVec(logical(im),FEATURE_VEC_SIZE);
