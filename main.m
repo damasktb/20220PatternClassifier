@@ -16,11 +16,12 @@ allNames = cell(classNum);
 allXbar = cell(classNum);
 allCov = cell(classNum);
 allTSet = cell(classNum);
-
 confusionMat = zeros(classNum);
 allPriors = cell(classNum);
 trainingImgCount = 0;
 
+% Find the largest class; all other classes will be oversampled to 
+% match this size
 maxTrainingSet = 0;
 for idx = 1:classNum
     directory = dir(strcat('Images/',allClasses{idx},'/'));

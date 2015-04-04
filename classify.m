@@ -8,11 +8,9 @@ function classification = classify(classData,class,img,FEATURE_VEC_SIZE)
     
     for idx = 1:length(classData)
         cdx = classData(idx);
-        frac1 = 1/(2*pi^(FEATURE_VEC_SIZE/2));
-        frac2 = 1/(sqrt(det(cdx.c)));
-        m = exp(-1/2 * (fv-cdx.xbar)' * pinv(cdx.c) * (fv-cdx.xbar));
-        prob = cdx.prior*real(frac1*frac2*m);
-        prob = log(prob);
+        p = exp(-1/2 * (fv-cdx.xbar)' * pinv(cdx.c) * (fv-cdx.xbar)) / ...
+            ((sqrt(det(cdx.c)))*2*pi^(FEATURE_VEC_SIZE/2));
+        prob = log(p);
         if idx == 1
             maxClass.probability = prob;
             maxClass.idx = 1;
