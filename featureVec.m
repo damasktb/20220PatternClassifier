@@ -3,15 +3,6 @@ function featureVector = featureVec(im, FEATURE_VEC_SIZE)
 %% Calculate and draw the chain code
 %% filter using the FT of the angles of the chaincode
 
-
-% c = chainCode(im);
-% s = size(c);
-% s = s(:,2);
-% c = mod((c(3,2:s) - c(3,1:s-1)),8);
-% c = c ./ sum(c .^2);
-% angles = c*(2*pi/8);
-
-% Uncomment the next two lines to produce original chain code
 angles = chainCode(im);
 angles = (2*pi/8) * angles(3,:);
 
@@ -42,4 +33,8 @@ filteredFFT = anglesFFT .* filter;
 
 featureVector = (abs(filteredFFT(1:N)))';
 
+% imsize = 40;
+% m=centersquare(im,imsize);
+% fv = abs(zernike_mom(m,zernike_bf(imsize,6)));
+% featureVector = fv ./ sum(fv);
 end
