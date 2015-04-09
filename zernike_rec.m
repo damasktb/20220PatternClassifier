@@ -1,3 +1,5 @@
+% COPYRIGHT CHRISTIAN WOLF, CODE USED WITH PERMISSION: 
+% http://liris.cnrs.fr/christian.wolf/software/zernike/
 % **********************************************************************
 % I=zernike_rec(Z,SZ,ZBFSTR)
 % I=zernike_rec(Z,SZ,ZBFSTR,OPTSTARTIND)

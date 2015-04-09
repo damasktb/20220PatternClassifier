@@ -1,3 +1,5 @@
+% COPYRIGHT CHRISTIAN WOLF, CODE USED WITH PERMISSION: 
+% http://liris.cnrs.fr/christian.wolf/software/zernike/
 % **********************************************************************
 % CS=centersquare(I)
 % CS=centersquare(I,OPTSIZE)

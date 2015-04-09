@@ -1,3 +1,5 @@
+% COPYRIGHT CHRISTIAN WOLF, CODE USED WITH PERMISSION: 
+% http://liris.cnrs.fr/christian.wolf/software/zernike/
 % **********************************************************************
 % PQ=zernike_orderlist(ORDER)
 % PQ=zernike_orderlist(ORDER, WITHNEG)

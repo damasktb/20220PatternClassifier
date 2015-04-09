@@ -1,5 +1,8 @@
+% Classify a set of binary images stored inside directories in Images/
 clear; close all; format short;
 
+% If using Filtered FFT features rather than Zernike moment features
+% change this to 13
 FV_SIZE = 16;
 
 % Load all class directories from the Images folder
@@ -9,9 +12,11 @@ allClasses = {classDirectory([classDirectory.isdir]).name};
 allClasses(ismember(allClasses,{'.','..','.DS_Store','Ignore'})) = [];
 classNum = length(allClasses);
 
-disp(strcat(num2str(classNum), ' classes found.'));
+% Display the classes
+disp(strcat(num2str(classNum), ' classes found:'));
+disp(allClasses')
 
-% Temporary cell arrays to store the class parameters and test sets
+% Temporary cell arrays to store the class parameters, priors and test sets
 allNames = cell(classNum);
 allXbar = cell(classNum);
 allCov = cell(classNum);
@@ -20,12 +25,15 @@ confusionMat = zeros(classNum);
 allPriors = cell(classNum);
 trainingImgCount = 0;
 
+
 % Find the largest class; all other classes will be oversampled to 
-% match this size
+% match this size. Calculate the priors.
 maxTrainingSet = 0;
 for idx = 1:classNum
     directory = dir(strcat('Images/',allClasses{idx},'/'));
     trainingSetSize = ceil(3*length(directory)/4);
+    allPriors{idx} = trainingSetSize;
+    trainingImgCount = trainingImgCount + trainingSetSize;
     if trainingSetSize > maxTrainingSet
         maxTrainingSet = trainingSetSize;
     end
@@ -34,7 +42,7 @@ end
 
 % Populate classData (via allNames, allXbar etc.) with
 % name/mean/covariances for each class' training data
-% as well as the names of the randomly chosen test data
+% as well as the names of the randomly chosen test set
 for idx = 1:classNum
     dirName = allClasses{idx};
     allNames{idx} = dirName;
@@ -45,8 +53,6 @@ for idx = 1:classNum
        allXbar{idx} = p.xbar;
        allCov{idx} = p.c;
        allTSet{idx} = p.testSet;
-       allPriors{idx} = p.count;
-       trainingImgCount = trainingImgCount+length(p.testSet);
     end
 end
     
@@ -55,11 +61,13 @@ classData = struct('name',allNames,...
                    'c',allCov,...
                    'testSet',allTSet,...
                    'prior', allPriors);
-               
+
+% Normalise the priors so they sum to 1
 for idx = 1:classNum
     classData(idx).prior = classData(idx).prior/trainingImgCount;
 end
 
+% Classify each image and populate a confusion matrix
 for idx = 1:classNum
     for idx2 = 1:length(classData(idx).testSet)
         predicted = classify(classData,idx,idx2,FV_SIZE);
@@ -67,6 +75,7 @@ for idx = 1:classNum
     end
 end
 
-
+% Display the confusion matrix and accuracy as a percentage
 disp(confusionMat);
-disp(matrixSpread(confusionMat,trainingImgCount));
+accuracy = matrixSpread(confusionMat,sum(sum(confusionMat)));
+disp(strcat(num2str(accuracy), '% accurate.'));
