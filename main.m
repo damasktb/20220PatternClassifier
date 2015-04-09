@@ -43,6 +43,7 @@ end
 % Populate classData (via allNames, allXbar etc.) with
 % name/mean/covariances for each class' training data
 % as well as the names of the randomly chosen test set
+disp('Estimating parameters.');
 for idx = 1:classNum
     dirName = allClasses{idx};
     allNames{idx} = dirName;
@@ -68,6 +69,7 @@ for idx = 1:classNum
 end
 
 % Classify each image and populate a confusion matrix
+disp('Classifying testing images.');
 for idx = 1:classNum
     for idx2 = 1:length(classData(idx).testSet)
         predicted = classify(classData,idx,idx2,FV_SIZE);
