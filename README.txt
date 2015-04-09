@@ -2,7 +2,7 @@
 > Ensure the Images directory and all subdirectories have been
 added to the path in MATLAB. 
 > Classes placed in ‘Ignore’ will be ignored by the program.
-> Typical program output is shown below
+> Typical program output is shown below:
 
 17 classes found:
     'Bird'
