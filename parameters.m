@@ -17,7 +17,8 @@ images = reshape(images(shuffled), size(images));
 % Split the training and testing data in a 75:25 ratio
 testSet = images(ceil(3*length(images)/4)+1:end);
 images = images(1:ceil(3*length(images)/4));
-% Uncomment the following line to revert back to not oversampling
+
+% Comment out the following line to use minority class oversampling
 maxTrainingSet = length(images);
 
 allFeatureVecs = zeros(FV_SIZE,maxTrainingSet);

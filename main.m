@@ -2,12 +2,11 @@
 clear; close all; format short;
 
 descriptors = 'ZERNIKE';
-% TOGGLE
 % descriptors = 'FOURIER';
 
 if strcmp(descriptors,'FOURIER')
     FV_SIZE = 13;
-else % ZERNIKE
+elseif strcmp(descriptors,'ZERNIKE')
     FV_SIZE = 16;
 end
 
@@ -38,16 +37,13 @@ trainingImgCount = 0;
 maxTrainingSet = 0;
 for idx = 1:classNum
     directory = dir(strcat('Images/',allClasses{idx},'/'));
-    trainingSetSize = ceil(3*length(directory)/4);
+    trainingSetSize = ceil(3*(length(directory)-3)/4); % Ignore the '.' files
     allPriors{idx} = trainingSetSize;
     trainingImgCount = trainingImgCount + trainingSetSize;
     if trainingSetSize > maxTrainingSet
         maxTrainingSet = trainingSetSize;
     end
 end
-maxTrainingSet = maxTrainingSet-2;
-disp(strcat(descriptors, ' descriptors.'));
-
 
 
 % Populate classData (via allNames, allXbar etc.) with name/mean/covariances
@@ -88,5 +84,5 @@ end
 
 % Display the confusion matrix and accuracy as a percentage
 disp(confusionMat);
-accuracy = matrixSpread(confusionMat,sum(sum(confusionMat)));
+accuracy = matrixSpread(confusionMat);
 disp(strcat(num2str(accuracy), '% accurate.'));
