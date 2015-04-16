@@ -1,9 +1,16 @@
 % Classify a set of binary images stored inside directories in Images/
 clear; close all; format short;
 
-% If using Filtered FFT features rather than Zernike moment features
-% change this to 13
-FV_SIZE = 16;
+descriptors = 'ZERNIKE';
+% TOGGLE
+% descriptors = 'FOURIER';
+
+if strcmp(descriptors,'FOURIER')
+    FV_SIZE = 13;
+else % ZERNIKE
+    FV_SIZE = 16;
+end
+
 
 % Load all class directories from the Images folder
 classDirectory = dir('Images/');
@@ -14,7 +21,7 @@ classNum = length(allClasses);
 
 % Display the classes
 disp(strcat(num2str(classNum), ' classes found:'));
-disp(allClasses')
+disp(allClasses');
 
 % Temporary cell arrays to store the class parameters, priors and test sets
 allNames = cell(classNum);
@@ -27,7 +34,7 @@ trainingImgCount = 0;
 
 
 % Find the largest class; all other classes will be oversampled to 
-% match this size. Calculate the priors.
+% match this size in the Parameters function (can be disabled). Calculate priors.
 maxTrainingSet = 0;
 for idx = 1:classNum
     directory = dir(strcat('Images/',allClasses{idx},'/'));
@@ -38,11 +45,13 @@ for idx = 1:classNum
         maxTrainingSet = trainingSetSize;
     end
 end
+maxTrainingSet = maxTrainingSet-2;
+disp(strcat(descriptors, ' descriptors.'));
 
 
-% Populate classData (via allNames, allXbar etc.) with
-% name/mean/covariances for each class' training data
-% as well as the names of the randomly chosen test set
+
+% Populate classData (via allNames, allXbar etc.) with name/mean/covariances
+% for each class' training data as well as the names of the randomly chosen test set
 disp('Estimating parameters.');
 for idx = 1:classNum
     dirName = allClasses{idx};
@@ -50,13 +59,13 @@ for idx = 1:classNum
     if exist(strcat('Images/',dirName,'/'),'dir') == 0
        disp('Error: Individual image directory set incorrectly.');
     else
-       p = parameters(dirName,FV_SIZE,maxTrainingSet);
+       p = parameters(dirName,FV_SIZE,maxTrainingSet,descriptors);
        allXbar{idx} = p.xbar;
        allCov{idx} = p.c;
        allTSet{idx} = p.testSet;
     end
 end
-    
+
 classData = struct('name',allNames,...
                    'xbar',allXbar,...
                    'c',allCov,...
@@ -72,7 +81,7 @@ end
 disp('Classifying testing images.');
 for idx = 1:classNum
     for idx2 = 1:length(classData(idx).testSet)
-        predicted = classify(classData,idx,idx2,FV_SIZE);
+        predicted = classify(classData,idx,idx2,descriptors,FV_SIZE);
         confusionMat(idx,predicted) = confusionMat(idx,predicted) + 1;
     end
 end
